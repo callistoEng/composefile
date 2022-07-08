@@ -1,0 +1,56 @@
+version: '3.9'
+services: 
+  geolocapp:
+    build: .
+    volumes: 
+      - .:/Djangogeoloc
+    ports: 
+      - 8000:8000
+    image: geolocoapp:1.0.0
+    env_file: 
+      - .env
+    container_name: geolocapp_container
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: 'on-failure'
+    depends_on: 
+      - db
+    networks: 
+      - geolocnetwork
+  db:
+    #for one thst contains postgis extension for postgres
+    image: kartoza/postgis:12.0
+    ports:
+        - 5432:5432
+    volumes:
+        - postgres_db:/var/lib/postgresql
+    environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASS=${POSTGRES_PASS}
+        - POSTGRES_DBNAME=${POSTGRES_DBNAME}
+    restart: "on-failure"
+    networks:
+        - geolocnetwork #services should have the same network
+    #for normal postgres
+    # image: postgres
+    # volumes: 
+    #   - ./data/pg/db:/var/lib/postgresql/data
+    # environment: 
+    #   - POSTGRES_DB=postgres
+    #   - POSTGRES_PASSWORD=postgres
+    #   - POSTGRES_USER=postgres
+    # container_name: postgres_db
+
+    #for mysql
+    # image: mysql:5.7
+    # volumes: 
+    #   - ./data/mysql/dbb:/var/lib/mysql
+    # environment: 
+    #   MYSQL_DATABASE: 'django-db'
+    #   MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    # container_name: postgres_db
+networks: 
+  geolocnetwork:
+    driver: bridge
+
+volumes: 
+  postgres_db:

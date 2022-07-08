@@ -1,0 +1,24 @@
+docker-compose build
+if image build withour an existing django project
+docker-compose run --rm djangoapp django-admin startproject coreapp .
+docker-compose up -d
+
+terminal in container
+docker exec -it djangoapp2_container /bin/sh
+
+##additional bonus compose
+docker-compose config
+
+##
+#6 170.3 ERROR: unable to select packages:
+#6 170.3     required by: world[gdal-bin]
+#6 170.3   libproj-dev (no such package):
+#6 170.3     required by: world[libproj-dev]
+#6 170.3   netcat (no such package):
+#6 170.3     required by: world[netcat]
+#6 170.3   python-gdal (no such package):
+#6 170.3     required by: world[python-gdal]
+#6 170.3   python3-gdal (no such package):
+#6 170.3     required by: world[python3-gdal]
+
+I just found a solution to solve it. Go to C drive , Users, Select your user, App data, Roaming and then delete the Docker folder. You shall be able to start docker again.
